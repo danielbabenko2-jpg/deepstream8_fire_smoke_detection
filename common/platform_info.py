@@ -16,18 +16,14 @@ class PlatformInfo:
         self.is_aarch64_verified = False
 
     def is_wsl(self):
-        with guard_platform_info:
-            # Check if its already verified as WSL system or not.
+        with guard_platform_info:.
             if not self.wsl_verified:
                 try:
-                    # Open /proc/version file
                     with open("/proc/version", "r") as version_file:
                         # Read the content
                         version_info = version_file.readline()
                         version_info = version_info.lower()
                         self.wsl_verified = True
-
-                        # Check if "microsoft" is present in the version information
                         if "microsoft" in version_info:
                             self.is_wsl_system = True
                 except Exception as e:
@@ -36,20 +32,13 @@ class PlatformInfo:
         return self.is_wsl_system
     
     def is_integrated_gpu(self):
-        #Using cuda apis to identify whether integrated/discreet
-        #This is required to distinguish Tegra and ARM_SBSA devices
         with guard_platform_info:
-            #Cuda initialize
             if not self.is_integrated_gpu_verified:
                 cuda_init_result, = driver.cuInit(0)
                 if  cuda_init_result == driver.CUresult.CUDA_SUCCESS:
-                    #Get cuda devices count
                     device_count_result, num_devices = driver.cuDeviceGetCount()
                     if device_count_result == driver.CUresult.CUDA_SUCCESS:
-                        #If atleast one device is found, we can use the property from
-                        #the first device
                         if num_devices >= 1:
-                            #Get properties from first device
                             property_result, properties = runtime.cudaGetDeviceProperties(0)
                             if property_result == runtime.cudaError_t.cudaSuccess:
                                 print("Is it Integrated GPU? :", properties.integrated)
@@ -67,7 +56,6 @@ class PlatformInfo:
         return self.is_integrated_gpu_system
 
     def is_platform_aarch64(self):
-        #Check if platform is aarch64 using uname
         if not self.is_aarch64_verified:
             if platform.uname()[4] == 'aarch64':
                 self.is_aarch64_platform =  True
