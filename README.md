@@ -19,6 +19,10 @@ The application receives an RTSP video stream, performs GPU-accelerated inferenc
 
 ---
 
+## Results
+
+---
+
 ## Technology Stack
 
 - NVIDIA DeepStream 8.0
